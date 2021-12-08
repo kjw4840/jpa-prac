@@ -2,8 +2,10 @@ package jpa.prac;
 
 
 import jpa.prac.entity.*;
+import jpa.prac.entity.items.Book;
+import jpa.prac.entity.items.Item;
+import jpa.prac.entity.items.Movie;
 import jpa.prac.repository.MemberRepository;
-import org.aspectj.weaver.ast.Or;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -76,5 +78,22 @@ public class test {
         team.setName("Ateam");
         team.getMembers().add(member);
         em.persist(team);
+    }
+
+    @Test
+    @Rollback(value = false)
+    public void test4() {
+        Movie movie = new Movie();
+        movie.setName("movie1");
+        movie.setDirector("A");
+        movie.setActor("B");
+        movie.setPrice(10000);
+        em.persist(movie);
+
+        Book book = new Book();
+        book.setName("book1");
+        book.setAuthor("AAA");
+        book.setIsbn("10a-2");
+        em.persist(book);
     }
 }

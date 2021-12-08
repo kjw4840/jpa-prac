@@ -1,5 +1,6 @@
 package jpa.prac.entity;
 
+import jpa.prac.entity.items.Item;
 import lombok.Getter;
 import lombok.Setter;
 
