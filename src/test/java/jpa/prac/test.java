@@ -1,9 +1,9 @@
 package jpa.prac;
 
 
-import jpa.prac.entity.Member;
-import jpa.prac.entity.Team;
+import jpa.prac.entity.*;
 import jpa.prac.repository.MemberRepository;
+import org.aspectj.weaver.ast.Or;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -36,8 +36,8 @@ public class test {
         member.setTeam(team);
         em.persist(member);
 
-//        em.flush();
-//        em.clear();
+        em.flush();
+        em.clear();
 
         System.err.println("======================");
         Member findMember = em.find(Member.class, member.getId());
@@ -47,21 +47,34 @@ public class test {
         for (Member memberFind : members) {
             System.out.println("memberFind = " + memberFind.getUsername());
         }
-
-//        System.out.println("findTeam.getName()) = " + findTeam.getName());
-
-//        Member member2 = new Member();
-//        member2.setUsername("test2");
-//        memberRepository.save(member2);
-
     }
 
     @Test
     @Rollback(value = false)
     public void test2() {
+        Item item1 = new Item();
+        item1.setName("book");
+        em.persist(item1);
 
+        OrderItem orderItem = new OrderItem();
+        orderItem.setItem(item1);
+        em.persist(orderItem);
 
+        Order order = new Order();
+        order.addOrderItem(orderItem);
+        em.persist(order);
+    }
 
+    @Test
+    @Rollback(value = false)
+    public void test3() {
+        Member member = new Member();
+        member.setUsername("tester");
+        em.persist(member);
 
+        Team team = new Team();
+        team.setName("Ateam");
+        team.getMembers().add(member);
+        em.persist(team);
     }
 }

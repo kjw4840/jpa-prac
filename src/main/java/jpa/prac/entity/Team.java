@@ -21,4 +21,8 @@ public class Team {
     @OneToMany(mappedBy = "team") // 읽기전용 , 연관관계 주인이 아님
     private List<Member> members = new ArrayList<>(); // ArraytList로 초기화 , nullException 처리, 관례
 
+//    @OneToMany
+//    @JoinColumn(name = "team_id")
+//    private List<Member> members = new ArrayList<>();
+
 }

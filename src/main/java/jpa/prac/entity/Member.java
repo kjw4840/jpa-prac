@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -26,9 +28,17 @@ public class Member {
     @JoinColumn(name = "team_id")
     private Team team;
 
+    @OneToOne
+    @JoinColumn(name = "locker_id")
+    private Locker locker;
+
+    @OneToMany(mappedBy = "member")
+    private List<Order> orders = new ArrayList<>();
+
+
     //연관관계 편의 메서드 : 양방향 연관관계에서 한쪽이 등록될때 다른 한쪽도 같이 등록
-    public void setTeam(Team team) {
-        this.team = team;
-        team.getMembers().add(this);
-    }
+//    public void setTeam(Team team) {
+//        this.team = team;
+//        team.getMembers().add(this);
+//    }
 }
