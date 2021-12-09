@@ -74,14 +74,46 @@ public class test {
     @Test
     @Rollback(value = false)
     public void test3() {
-        Member member = new Member();
-        member.setUsername("tester");
-        em.persist(member);
 
-        Team team = new Team();
-        team.setName("Ateam");
-        team.getMembers().add(member);
-        em.persist(team);
+        Team team1 = new Team();
+        team1.setName("Ateam");
+        em.persist(team1);
+        Team team2 = new Team();
+        team2.setName("Bteam");
+        em.persist(team2);
+        Team team3 = new Team();
+        team3.setName("Cteam");
+        em.persist(team3);
+
+
+
+
+        Member member1 = new Member();
+        member1.setUsername("tester1");
+        member1.setTeam(team1);
+        em.persist(member1);
+
+        Member member2 = new Member();
+        member2.setUsername("tester2");
+        member2.setTeam(team2);
+        em.persist(member2);
+
+        Member member3 = new Member();
+        member3.setTeam(team3);
+        member3.setUsername("tester3");
+        em.persist(member3);
+
+        em.flush();
+        em.clear();
+
+        List<Member> resultList = em.createQuery("select m From Member m join fetch m.team", Member.class).getResultList();
+
+        for (Member member : resultList) {
+            System.out.println("tester:::" + member.getUsername() + "team::" + member.getTeam().getName() );
+
+        }
+
+
     }
 
     @Test
