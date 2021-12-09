@@ -1,5 +1,6 @@
 package jpa.prac.entity.items;
 
+import jpa.prac.entity.BaseEntity;
 import jpa.prac.entity.Category;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,9 +12,9 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn
-public class Item {
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+//@DiscriminatorColumn
+public abstract class Item extends BaseEntity {
 
     @Id @GeneratedValue
     @Column(name = "item_id")

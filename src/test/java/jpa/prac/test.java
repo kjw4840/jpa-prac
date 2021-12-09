@@ -2,6 +2,8 @@ package jpa.prac;
 
 
 import jpa.prac.entity.*;
+import jpa.prac.entity.casecade.Child;
+import jpa.prac.entity.casecade.Parent;
 import jpa.prac.entity.items.Book;
 import jpa.prac.entity.items.Item;
 import jpa.prac.entity.items.Movie;
@@ -13,6 +15,7 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @SpringBootTest
@@ -54,12 +57,13 @@ public class test {
     @Test
     @Rollback(value = false)
     public void test2() {
-        Item item1 = new Item();
-        item1.setName("book");
-        em.persist(item1);
+
+        Book book1 = new Book();
+        book1.setName("mBook");
+        em.persist(book1);
 
         OrderItem orderItem = new OrderItem();
-        orderItem.setItem(item1);
+        orderItem.setItem(book1);
         em.persist(orderItem);
 
         Order order = new Order();
@@ -95,5 +99,78 @@ public class test {
         book.setAuthor("AAA");
         book.setIsbn("10a-2");
         em.persist(book);
+    }
+
+    @Test
+//    @Rollback(value = false)
+    public void test5() {
+        Team team = new Team();
+        team.setName("aTeam");
+        em.persist(team);
+
+        Member member = new Member();
+        member.setCreatedBy("kim");
+        member.setCreatedDate(LocalDateTime.now());
+        member.setUsername("user1");
+        member.setTeam(team);
+        em.persist(member);
+
+        em.flush();
+        em.clear();
+//
+        Member findMember = em.find(Member.class, member.getId());
+//        System.out.println("findMember.getClass() = " + findMember.getClass());
+        System.out.println("member.getTeam().getClass() = " + member.getTeam().getClass());
+        member.getTeam().getName();
+        System.out.println("member.getTeam().getClass() = " + member.getTeam().getClass());
+    }
+
+    @Test
+    @Rollback(value = false)
+    public void casecadeTest() {
+        Parent parent = new Parent();
+
+        Child child1 = new Child();
+        Child child2 = new Child();
+        child1.setName("aaa");
+        child2.setName("bbb");
+
+        parent.addChild(child1);
+        parent.addChild(child2);
+
+        em.persist(child1);
+        em.persist(child2);
+        em.persist(parent);
+
+//        Parent findParent = em.find(Parent.class, parent.getId());
+//        findParent.getChildList().remove(0);
+//        findParent.setName("gasg");
+//        System.out.println("test:::" + findParent.getChildList());
+//        findParent.getChildList().forEach(c -> {
+//            c.setName("cccccc");
+//            System.out.println("ccc" + c.getName());
+//        });
+    }
+
+    @Test
+    @Rollback(value = false)
+    public void testEmbedded() {
+        Member member = new Member();
+        member.setUsername("kjw");
+        member.setAddress(new Address("ggg","sfaf","23-33"));
+        member.getFavoriteFoods().add("치킨");
+        member.getFavoriteFoods().add("치킨2");
+        em.persist(member);
+
+        em.flush();
+        em.clear();
+
+        Member findMember = em.find(Member.class, member.getId());
+        findMember.getAddressHistory().add(new AddressEntity("a","b","c"));
+        findMember.getAddressHistory().add(new AddressEntity("aa","bb","cc"));
+
+        AddressEntity addressEntity = em.find(AddressEntity.class, 1L);
+        em.flush();
+        em.clear();
     }
 }
